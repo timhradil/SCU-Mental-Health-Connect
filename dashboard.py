@@ -87,14 +87,20 @@ while True:
                 else:
                     break
 
-        d = {'Dates': box_date_strings, 'Conversations': box_values}
+        if boxUnit == "Days":
+            d = {'Dates': box_date_strings, 'Conversations': box_values}
+        else:
+            d = {'Times': box_date_strings, 'Conversations': box_values}
 
         histo_df = pd.DataFrame(data=d)
 
         title.write("Total Conversations From " + startDateTimeString + " To " + endDateTimeString)
-        chart.bar_chart(data=histo_df, x='Dates', y='Conversations')
+        if boxUnit == "Days":
+            chart.bar_chart(data=histo_df, x='Dates', y='Conversations')
+        else:
+            chart.bar_chart(data=histo_df, x='Times', y='Conversations')
     
     else:
         title.write("No Data From " + startDateTimeString + " To " + endDateTimeString)
     
-    sleep(5)
+    sleep(1)
