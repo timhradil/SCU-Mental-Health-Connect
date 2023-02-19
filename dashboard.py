@@ -40,7 +40,8 @@ chart = st.empty()
 while True:
     startDateTimestamp = datetime.combine(startDate, time(startHour, startMin, 0)).timestamp()
     if live:
-        endDateTimestamp = datetime.now(pytz.timezone('US/Pacific')).timestamp()
+        endDateTimestamp = datetime.now().timestamp()
+        endDateTimestamp_localized = datetime.now(pytz.timezone('US/Pacific').timestamp())
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
 
@@ -61,19 +62,19 @@ while True:
     if boxUnit == "Days":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%m/%d/%Y") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp).strftime("%m/%d/%Y")
+        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y")
     if boxUnit == "Hours":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%H:%M") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y, %H:%M")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp).strftime("%m/%d/%Y, %H:%M")
+        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y, %H:%M")
     if boxUnit == "Minutes":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%H:%M") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y, %H:%M")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp).strftime("%m/%d/%Y, %H:%M")
+        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y, %H:%M")
     if boxUnit == "Seconds":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%H:%M:%S") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y, %H:%M:%S")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp).strftime("%m/%d/%Y, %H:%M:%S")
+        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y, %H:%M:%S")
     box_values = [0 for _ in range(boxes)]
 
     if df.size > 0:
