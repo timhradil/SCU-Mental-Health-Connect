@@ -44,6 +44,7 @@ while True:
         endDateTimestamp_localized = datetime.now(pytz.timezone('US/Pacific').timestamp())
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
+        endDateTimestamp_localized = endDateTimestamp
 
     if startDateTimestamp >= endDateTimestamp:
         title.write("Start date must be before end date")
