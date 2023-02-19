@@ -41,7 +41,7 @@ while True:
     startDateTimestamp = datetime.combine(startDate, time(startHour, startMin, 0)).timestamp()
     if live:
         endDateTimestamp = datetime.now().timestamp()
-        endDateTimestamp_localized = datetime.now(pytz.timezone('US/Pacific').timestamp())
+        endDateTimestamp_localized = datetime.now(pytz.timezone('US/Pacific')).timestamp()
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
         endDateTimestamp_localized = endDateTimestamp
