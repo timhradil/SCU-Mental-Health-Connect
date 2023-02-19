@@ -39,7 +39,7 @@ chart = st.empty()
 while True:
     startDateTimestamp = datetime.combine(startDate, time(startHour, startMin, 0)).timestamp()
     if live:
-        endDateTimestamp = datetime.now().timestamp() - 8 * 60 * 60
+        endDateTimestamp = datetime.now().timestamp()
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
 
