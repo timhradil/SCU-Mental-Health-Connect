@@ -1,0 +1,124 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  HackForHumanity-backend
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+    Tracing: Active
+  Api:
+    TracingEnabled: True
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+
+Resources:
+  putLog:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: putLog/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - arm64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: !Ref logsDynamoDB
+      Events:
+        PutLogEvent:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /putLog
+            Method: POST
+            RestApiId:
+              Ref: logApi
+      Policies:
+      - AmazonDynamoDBFullAccess
+
+  getLogs:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: getLogs/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - arm64
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: !Ref logsDynamoDB
+      Events:
+        GetLogsEvent:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /getLogs
+            Method: POST
+            RestApiId:
+              Ref: logApi
+      Policies:
+      - AmazonDynamoDBFullAccess
+
+  logsDynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: logId
+          AttributeType: S
+        - AttributeName: timeCreated
+          AttributeType: N
+        - AttributeName: phone 
+          AttributeType: S
+        - AttributeName: outcome
+          AttributeType: S
+      KeySchema:
+        - AttributeName: logId
+          KeyType: HASH
+        - AttributeName: timeCreated
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: phoneIndex
+          KeySchema:
+          - AttributeName: phone
+            KeyType: HASH
+          - AttributeName: timeCreated
+            KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+            - logId
+            - outcome
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: outcomeIndex
+          KeySchema:
+          - AttributeName: outcome
+            KeyType: HASH
+          - AttributeName: timeCreated
+            KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+            - logId
+            - phone
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  logApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  LogApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${logApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
