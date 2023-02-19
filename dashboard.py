@@ -17,7 +17,7 @@ with st.sidebar:
     startMin = st.number_input("Start Minute", min_value = 0, max_value = 59, value = 0, step = 1) 
     live = st.checkbox("Update End Date Live")
     if not live:
-        endDate = st.date_input("End Date")
+        endDate = st.date_input("End Date") 
         endHour = st.number_input("End Hour", min_value = 0, max_value = 23, value = 23, step = 1)
         endMin = st.number_input("End Minute", min_value = 0, max_value = 59, value = 59, step = 1)
     boxValue = st.number_input("Boxing Value", min_value = 1, value = 1, step = 1)
@@ -39,9 +39,13 @@ chart = st.empty()
 while True:
     startDateTimestamp = datetime.combine(startDate, time(startHour, startMin, 0)).timestamp()
     if live:
-        endDateTimestamp = datetime.now().timestamp()
+        endDateTimestamp = datetime.now().timestamp() - 8 * 60 * 60
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
+
+    if startDateTimestamp >= endDateTimestamp:
+        title.write("Start date must be before end date")
+        break
     
     url = "https://odozkue0n6.execute-api.us-west-2.amazonaws.com/Stage/getLogs"
     body = {"startTime":startDateTimestamp, "endTime": endDateTimestamp}
