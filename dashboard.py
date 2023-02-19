@@ -52,7 +52,9 @@ while True:
     body = {"startTime":startDateTimestamp, "endTime": endDateTimestamp}
     response = requests.post(url, json = body)
 
-    df = pd.json_normalize(response.json(), record_path=['logs'])
+    if response.status_code == 200:
+        df = pd.json_normalize(response.json(), record_path=['logs'])
+
     boxes = math.ceil((endDateTimestamp - startDateTimestamp)/boxSize)
     if boxUnit == "Days":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%m/%d/%Y") for box in range(boxes)]
