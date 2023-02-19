@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 from datetime import time
 from time import sleep
+import pytz
 
 st.set_page_config(
         page_title = "Dashboard",
@@ -39,7 +40,7 @@ chart = st.empty()
 while True:
     startDateTimestamp = datetime.combine(startDate, time(startHour, startMin, 0)).timestamp()
     if live:
-        endDateTimestamp = datetime.now().timestamp()
+        endDateTimestamp = datetime.now(pytz.timezone('US/Pacific')).timestamp()
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
 
