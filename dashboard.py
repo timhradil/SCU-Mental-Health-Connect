@@ -54,6 +54,7 @@ while True:
 
     if response.status_code == 200:
         df = pd.json_normalize(response.json(), record_path=['logs'])
+        continue
 
     boxes = math.ceil((endDateTimestamp - startDateTimestamp)/boxSize)
     if boxUnit == "Days":
