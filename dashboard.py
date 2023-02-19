@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 with st.sidebar:
-    startDate = st.date_input("Start Date")
+    startDate = st.date_input("Start Date", value = datetime.now(pytz.timezone('US/Pacific')))
     startHour = st.number_input("Start Hour", min_value = 0, max_value = 24, value = 0, step = 1)
     startMin = st.number_input("Start Minute", min_value = 0, max_value = 59, value = 0, step = 1) 
     live = st.checkbox("Update End Date Live")
