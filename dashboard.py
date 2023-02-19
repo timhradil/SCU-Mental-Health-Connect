@@ -41,10 +41,10 @@ while True:
     startDateTimestamp = datetime.combine(startDate, time(startHour, startMin, 0)).timestamp()
     if live:
         endDateTimestamp = datetime.now().timestamp()
-        endDateTimestamp_localized = datetime.now(pytz.timezone('US/Pacific')).timestamp()
+        endDateTime_localized = datetime.now(pytz.timezone('US/Pacific'))
     else:
         endDateTimestamp = datetime.combine(endDate, time(endHour, endMin, 0)).timestamp()
-        endDateTimestamp_localized = endDateTimestamp
+        endDateTime_localized = datetime.combine(endDate, time(endHour, endMin, 0))
 
     if startDateTimestamp >= endDateTimestamp:
         title.write("Start date must be before end date")
@@ -63,19 +63,19 @@ while True:
     if boxUnit == "Days":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%m/%d/%Y") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y")
+        endDateTimeString = endDateTime_localized.strftime("%m/%d/%Y")
     if boxUnit == "Hours":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%H:%M") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y, %H:%M")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y, %H:%M")
+        endDateTimeString = endDateTime_localized.strftime("%m/%d/%Y, %H:%M")
     if boxUnit == "Minutes":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%H:%M") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y, %H:%M")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y, %H:%M")
+        endDateTimeString = endDateTime_localized.strftime("%m/%d/%Y, %H:%M")
     if boxUnit == "Seconds":
         box_date_strings = [datetime.fromtimestamp(startDateTimestamp + boxSize * box).strftime("%H:%M:%S") for box in range(boxes)]
         startDateTimeString = datetime.fromtimestamp(startDateTimestamp).strftime("%m/%d/%Y, %H:%M:%S")
-        endDateTimeString = datetime.fromtimestamp(endDateTimestamp_localized).strftime("%m/%d/%Y, %H:%M:%S")
+        endDateTimeString = endDateTime_localized.strftime("%m/%d/%Y, %H:%M:%S")
     box_values = [0 for _ in range(boxes)]
 
     if df.size > 0:
